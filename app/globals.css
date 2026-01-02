@@ -1,0 +1,14 @@
+@import 'modern-normalize/modern-normalize.css';
+
+body {
+  font-family: var(--roboto), sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  height: 100%;
+}
+main {
+  flex: 1;
+  background: linear-gradient(180deg, #f9fafb 0%, #ffffff 85%);
+}

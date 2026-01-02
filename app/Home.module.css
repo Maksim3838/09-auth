@@ -1,0 +1,57 @@
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 2rem 5rem;
+
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.heroLeft {
+  max-width: 520px;
+}
+
+.title {
+  font-size: 3.1rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.75rem;
+  color: #111;
+}
+
+.title span {
+  color: #3b82f6;
+}
+
+.description {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #444;
+  max-width: 46ch;
+  margin-bottom: 1.25rem;
+}
+
+.descriptionSecondary {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #666;
+  max-width: 46ch;
+}
+
+.heroRight {
+  position: relative;
+  width: 100%;
+  height: 420px;
+}
+
+.kicker {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  margin-bottom: 0.75rem;
+}
