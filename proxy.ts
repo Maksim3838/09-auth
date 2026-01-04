@@ -1,41 +1,32 @@
-type ProxyRequest = Request & {
-  nextUrl: URL;
-  cookies: {
-    get(name: string): { value: string } | undefined;
-  };
-};
-
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 const PRIVATE_ROUTES = ['/profile', '/notes'];
+const PUBLIC_ROUTES = ['/sign-in', '/sign-up'];
 
+const matchRoute = (pathname: string, routes: string[]) =>
+  routes.some(route => pathname.startsWith(route));
 
-const AUTH_ROUTES = ['/sign-in', '/sign-up'];
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-export default function proxy(request: ProxyRequest) {
-  const { pathname, origin } = request.nextUrl;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
 
+  const isPrivateRoute = matchRoute(pathname, PRIVATE_ROUTES);
+  const isPublicRoute = matchRoute(pathname, PUBLIC_ROUTES);
+
+    if (isPrivateRoute && !accessToken) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/sign-in';
+    return NextResponse.redirect(url);
+  }
   
-  const token = request.cookies.get('token')?.value;
-
-  
-  const isPrivateRoute = PRIVATE_ROUTES.some(route =>
-    pathname.startsWith(route)
-  );
-
-  const isAuthRoute = AUTH_ROUTES.some(route =>
-    pathname.startsWith(route)
-  );
-
-  
-  if (isPrivateRoute && !token) {
-    return Response.redirect(new URL('/sign-in', origin));
+     if (isPublicRoute && accessToken) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/profile';
+    return NextResponse.redirect(url);
   }
 
-  
-  if (isAuthRoute && token) {
-    return Response.redirect(new URL('/profile', origin));
-  }
-
-  
-  return new Response(null, { status: 200 });
+  return NextResponse.next();
 }
