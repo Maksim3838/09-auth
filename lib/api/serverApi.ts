@@ -56,3 +56,20 @@ export async function getMeServer(): Promise<User> {
   });
   return data;
 }
+
+export async function checkSession(refreshToken: string) {
+  const res = await fetch(`${process.env.API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Cookie: `refreshToken=${refreshToken}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Session expired');
+  }
+
+  return res.json(); 
+}
