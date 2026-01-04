@@ -1,140 +1,65 @@
-import { api } from './api';
-import type { User } from '@/types/user';
-import type { Note, NoteTag } from '@/types/note';
+// updateMe;
+import { User } from '@/types/user';
+import type { FetchNotesResponse, NewNote, Note } from '../../types/note';
+import { nextServer } from './api';
+import { CheckSessionRequest, RegisterRequest, UpdateMeRequest } from '@/types/requests';
 
-/* Auth */
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-type CheckSessionRequest = {
-  success: boolean;
-};
-
-export async function register(data: RegisterRequest): Promise<User> {
-  const res = await api.post<User>('/auth/register', data, {
-    withCredentials: true
+export async function fetchNotes(
+  searchValue: string,
+  page: number,
+  tag?: string
+): Promise<FetchNotesResponse> {
+  const { data } = await nextServer.get<FetchNotesResponse>('/notes', {
+    params: {
+      ...(searchValue !== '' && { search: searchValue }),
+      page,
+      perPage: 12,
+      ...(tag && { tag }),
+    },
   });
-  return res.data;
+  return data;
 }
 
-export async function login(data: LoginRequest): Promise<User> {
-  const res = await api.post<User>('/auth/login', data, {
-    withCredentials: true,
-  });
-  return res.data;
+export async function createNote(newNote: NewNote): Promise<Note> {
+  const { data } = await nextServer.post<Note>('/notes', newNote);
+  return data;
 }
 
-export async function logout(): Promise<void> {
-  await api.post('/auth/logout', {}, {
-    withCredentials: true
-  });
-}
-
-export async function checkSession(): Promise<boolean> {
-  const res = await api.get<CheckSessionRequest>('/auth/session');
-  return res.data.success;
-};
-
-
-/* User */
-
-export async function getMe(): Promise<User> {
-  const res = await api.get<User>('/users/me', {
-    withCredentials: true,
-  });
-
-  if (!res.data) {
-    throw new Error('Unauthorized');
-  }
-
-  return res.data;
-}
-
-
-export async function updateMe(data: Partial<User>): Promise<User> {
-  const res = await api.patch<User>('/users/me', data, {
-    withCredentials: true,
-  });
-
-  if (!res.data) {
-    throw new Error('Failed to update profile');
-  }
-
-  return res.data;
-}
-
-
-/* Notes */
-
-export interface FetchNotesParams {
-  search?: string;
-  tag?: string;
-  page?: number;
-  perPage?: number;
-  sortBy?: 'created' | 'updated';
-}
-
-export interface FetchNotesResponse {
-  notes: Note[];
-  totalPages: number;
-}
-
-export interface CreateNoteParams {
-  title: string;
-  content: string;
-  tag: NoteTag;
-}
-
-export async function fetchNotes(params: FetchNotesParams): Promise<FetchNotesResponse> {
-  try {
-    const res = await api.get<FetchNotesResponse>('/notes', {
-      params,
-      withCredentials: true,
-    });
-    return res.data ?? { notes: [], totalPages: 0 };
-  } catch {
-    return { notes: [], totalPages: 0 };
-  }
+export async function deleteNote(id: string): Promise<Note> {
+  const { data } = await nextServer.delete(`/notes/${id}`);
+  return data;
 }
 
 export async function fetchNoteById(id: string): Promise<Note> {
-  const res = await api.get<Note>(`/notes/${id}`, { withCredentials: true });
-  
-  if (!res.data)
-    throw new Error('Note not found');
-  
-  return res.data;
+  const { data } = await nextServer.get<Note>(`/notes/${id}`);
+  return data;
 }
 
-export async function createNote(data: CreateNoteParams): Promise<Note> {
-  const res = await api.post<Note>('/notes', data, {
-    withCredentials: true,
-  });
-
-  if (!res.data) {
-    throw new Error('Failed to create note');
-  }
-
-  return res.data;
+export async function register(userData: RegisterRequest): Promise<User> {
+  const { data } = await nextServer.post<User>('/auth/register', userData);
+  return data;
 }
 
+export async function login(userData: RegisterRequest): Promise<User> {
+  const { data } = await nextServer.post<User>('/auth/login', userData);
+  return data;
+}
 
-export async function deleteNote(id: string): Promise<Note> {
-  const res = await api.delete<Note>(`/notes/${id}`, {
-    withCredentials: true,
-  });
+export async function checkSession(): Promise<boolean> {
+  const res = await nextServer.get<CheckSessionRequest>('/auth/session');
+  return res.data.success;
+}
 
-  if (!res.data) {
-    throw new Error('Failed to delete note');
-  }
+export async function getMe(): Promise<User> {
+  const { data } = await nextServer.get<User>('/users/me');
+  return data;
+}
 
-  return res.data;
+export async function logout(): Promise<void> {
+  await nextServer.post('/auth/logout');
+}
+
+export async function updateMe(newData: UpdateMeRequest): Promise<User> {
+  const { data } = await nextServer.patch<User>('/users/me', newData);
+  return data;
 }
