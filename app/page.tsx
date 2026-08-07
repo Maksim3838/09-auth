@@ -1,69 +1,37 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import css from "./page.module.css";
 
-export default function Home() {
+const Home = () => {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className={css.main}>
+      <div className={css.hero}>
+        <h1 className={css.title}>Welcome to NoteHub</h1>
+        <p className={css.subtitle}>
+          Organize your thoughts. Boost your productivity.
+        </p>
+      </div>
+
+      <div className={css.container}>
+        <section className={css.section}>
+          <h2 className={css.heading}>About NoteHub</h2>
+          <p className={css.description}>
+            NoteHub is a simple and efficient application designed for managing
+            personal notes. It helps keep your thoughts organized and accessible
+            in one place, whether you are at home or on the go.
           </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </section>
+
+        <section className={css.section}>
+          <h2 className={css.heading}>Features</h2>
+          <ul className={css.features}>
+            <li>📝 Clean and minimal writing interface</li>
+            <li>🔍 Keyword search for quick access</li>
+            <li>📂 Structured organization with tags</li>
+            <li>☁️ Access notes anywhere, anytime</li>
+          </ul>
+        </section>
+      </div>
+    </main>
   );
-}
+};
+
+export default Home;

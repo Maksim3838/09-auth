@@ -1,0 +1,52 @@
+.footer {
+    background: linear-gradient(100deg, #ececf3, #cdddec, #e9e8d8);
+    border-top: 1px solid #e5e5e5;
+    padding: 24px 32px;
+    margin-top: auto;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: #444;
+    font-size: 15px;
+}
+
+.copy {
+    font-weight: 500;
+    color: #333;
+}
+
+.wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dev,
+.contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.email {
+    color: #2a5d9f;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.email:hover {
+    text-decoration: underline;
+}
+
+.icon {
+    font-size: 16px;
+    color: #666;
+}
