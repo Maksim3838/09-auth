@@ -16,9 +16,9 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  const response = await checkServerSession();
+  const session = await checkServerSession();
 
-  const isAuthenticated = response.status === 200;
+  const isAuthenticated = session?.status === 200;
 
   if (isPrivateRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/sign-in", request.url));

@@ -18,11 +18,26 @@ export const getServerMe = async () => {
 
 export const checkServerSession = async () => {
   const cookieStore = await cookies();
-  const response = await nextServer.get("/auth/session", {
-    headers: { Cookie: cookieStore.toString() },
-  });
-  return response;
+
+  try {
+    const response = await nextServer.get("/auth/session", {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+
+    return response;
+  } catch {
+    return null;
+  }
 };
+// export const checkServerSession = async () => {
+//   const cookieStore = await cookies();
+//   const response = await nextServer.get("/auth/session", {
+//     headers: { Cookie: cookieStore.toString() },
+//   });
+//   return response;
+// };
 
 export const fetchServerNotes = async (
   query: string,
