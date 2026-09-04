@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkServerSession } from "./lib/api/serverApi";
 
 const privateRoutes = ["/profile", "/notes"];
-
 const publicRoutes = ["/sign-in", "/sign-up"];
 
 export async function proxy(request: NextRequest) {
@@ -16,16 +15,32 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  const session = await checkServerSession();
+  const accessToken = request.cookies.get("accessToken")?.value;
+  const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  const isAuthenticated = session?.status === 200;
+  let isAuthenticated = false;
 
+  // Якщо accessToken є — перевіряємо сесію
+  if (accessToken) {
+    const session = await checkServerSession();
+    isAuthenticated = session?.status === 200;
+  }
+
+  // Якщо accessToken немає, але є refreshToken —
+  // checkServerSession() має спробувати оновити сесію
+  if (!accessToken && refreshToken) {
+    const session = await checkServerSession();
+    isAuthenticated = session?.status === 200;
+  }
+
+  // Неавторизований → приватна сторінка
   if (isPrivateRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
 
+  // Авторизований → публічна сторінка
   if (isPublicRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
